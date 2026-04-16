@@ -72,8 +72,6 @@ for /d %%x in ("%ProgramFiles(x86)%\Steam\logs\*") do rd /s /q "%%x" 2>nul
 del /f /s /q "%ProgramFiles(x86)%\Steam\dumps\*.*" 2>nul
 for /d %%x in ("%ProgramFiles(x86)%\Steam\dumps\*") do rd /s /q "%%x" 2>nul
 for /d %%r in ("%ProgramData%\Razer\*") do del /f /s /q "%%r\Logs\*.*" 2>nul
-del /f /s /q "%ProgramData%\NVIDIA Corporation\NV_Cache\*.*" 2>nul
-for /d %%x in ("%ProgramData%\NVIDIA Corporation\NV_Cache\*") do rd /s /q "%%x" 2>nul
 del /f /s /q "%ProgramData%\Battle.net\Cache\*.*" 2>nul
 for /d %%x in ("%ProgramData%\Battle.net\Cache\*") do rd /s /q "%%x" 2>nul
 del /f /s /q "%ProgramData%\Blizzard Entertainment\Battle.net\Cache\*.*" 2>nul
@@ -186,15 +184,6 @@ for /d %%u in (%SystemDrive%\Users\*) do (
         for /d %%w in ("%%v\*") do del /f /s /q "%%w\Cache\*.*" 2>nul
     )
 
-    del /f /s /q "%%u\AppData\Local\NVIDIA\GLCache\*.*" 2>nul
-    for /d %%x in ("%%u\AppData\Local\NVIDIA\GLCache\*") do rd /s /q "%%x" 2>nul
-    del /f /s /q "%%u\AppData\Local\NVIDIA\DXCache\*.*" 2>nul
-    for /d %%x in ("%%u\AppData\Local\NVIDIA\DXCache\*") do rd /s /q "%%x" 2>nul
-    del /f /s /q "%%u\AppData\Local\AMD\DxCache\*.*" 2>nul
-    for /d %%x in ("%%u\AppData\Local\AMD\DxCache\*") do rd /s /q "%%x" 2>nul
-    del /f /s /q "%%u\AppData\Local\AMD\GLCache\*.*" 2>nul
-    for /d %%x in ("%%u\AppData\Local\AMD\GLCache\*") do rd /s /q "%%x" 2>nul
-
     del /f /s /q "%%u\AppData\Roaming\Code\Cache\*.*" 2>nul
     for /d %%x in ("%%u\AppData\Roaming\Code\Cache\*") do rd /s /q "%%x" 2>nul
     del /f /s /q "%%u\AppData\Roaming\Code\CachedData\*.*" 2>nul
@@ -270,9 +259,6 @@ del /f /s /q "%ProgramData%\Package Cache\*.*" 2>nul
 for %%E in ("*.log" "*.tmp" "*.temp" "*.dmp" "*.old" "*.chk" "*.gid" "*.fts" "*.$$$" "*.---" "*.??$" "*.__" "*.~mp" "*._mp" "*.$db" "*.db$" "thumbs.db" "*.??~") do (
     del /f /q "%SystemDrive%\%%~E" 2>nul
 )
-
-if exist %SystemDrive%\AMD rd /s /q %SystemDrive%\AMD 2>nul
-if exist %SystemDrive%\NVIDIA rd /s /q %SystemDrive%\NVIDIA 2>nul
 
 if exist %SystemDrive%\Windows.old rd /s /q %SystemDrive%\Windows.old 2>nul
 if exist %SystemDrive%\$Windows.~BT rd /s /q %SystemDrive%\$Windows.~BT 2>nul
