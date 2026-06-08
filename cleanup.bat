@@ -144,6 +144,15 @@ for /d %%u in (%SystemDrive%\Users\*) do (
     del /f /s /q "%%u\AppData\Roaming\discord\Crashpad\reports\*.*" 2>nul
     for /d %%x in ("%%u\AppData\Roaming\discord\Crashpad\reports\*") do rd /s /q "%%x" 2>nul
     
+    del /f /s /q "%%u\AppData\Roaming\Slack\Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Slack\Cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Slack\Code Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Slack\Code Cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Slack\GPUCache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Slack\GPUCache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Slack\logs\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Slack\logs\*") do rd /s /q "%%x" 2>nul
+    
     for /d %%r in ("%%u\AppData\Local\Razer\*") do (
         del /f /s /q "%%r\Logs\*.*" 2>nul
         del /f /s /q "%%r\Cache\*.*" 2>nul
@@ -192,6 +201,41 @@ for /d %%u in (%SystemDrive%\Users\*) do (
     for /d %%x in ("%%u\AppData\Roaming\Code\CachedExtensionVSIXs\*") do rd /s /q "%%x" 2>nul
     del /f /s /q "%%u\AppData\Roaming\Code\Code Cache\*.*" 2>nul
     for /d %%x in ("%%u\AppData\Roaming\Code\Code Cache\*") do rd /s /q "%%x" 2>nul
+
+    del /f /s /q "%%u\AppData\Roaming\Code - Insiders\Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Code - Insiders\Cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Code - Insiders\CachedData\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Code - Insiders\CachedData\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Code - Insiders\CachedExtensionVSIXs\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Code - Insiders\CachedExtensionVSIXs\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Code - Insiders\Code Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Code - Insiders\Code Cache\*") do rd /s /q "%%x" 2>nul
+
+    del /f /s /q "%%u\AppData\Local\Yarn\Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\Yarn\Cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\.yarn\berry\cache\*.*" 2>nul
+    for /d %%x in ("%%u\.yarn\berry\cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Local\pnpm\cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\pnpm\cache\*") do rd /s /q "%%x" 2>nul
+
+    del /f /s /q "%%u\AppData\Local\Zoom\logs\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\Zoom\logs\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Zoom\logs\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Zoom\logs\*") do rd /s /q "%%x" 2>nul
+
+    del /f /s /q "%%u\AppData\Local\WhatsApp\Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\WhatsApp\Cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Local\WhatsApp\Code Cache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\WhatsApp\Code Cache\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Local\WhatsApp\GPUCache\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\WhatsApp\GPUCache\*") do rd /s /q "%%x" 2>nul
+
+    del /f /s /q "%%u\AppData\Roaming\Telegram Desktop\tdata\emoji\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Roaming\Telegram Desktop\tdata\emoji\*") do rd /s /q "%%x" 2>nul
+    del /f /s /q "%%u\AppData\Roaming\Telegram Desktop\tdata\user_data\cache.json" 2>nul
+
+    del /f /s /q "%%u\AppData\Local\Docker\log\*.*" 2>nul
+    for /d %%x in ("%%u\AppData\Local\Docker\log\*") do rd /s /q "%%x" 2>nul
 
     del /f /s /q "%%u\AppData\Local\Spotify\Storage\*.*" 2>nul
     for /d %%x in ("%%u\AppData\Local\Spotify\Storage\*") do rd /s /q "%%x" 2>nul
@@ -251,6 +295,7 @@ del /f /s /q %ProgramData%\Microsoft\Windows\WER\*.* 2>nul
 for /d %%x in (%ProgramData%\Microsoft\Windows\WER\*) do rd /s /q "%%x" 2>nul
 del /f /s /q "%ProgramData%\Microsoft\Windows Defender\Scans\History\*.*" 2>nul
 for /d %%x in ("%ProgramData%\Microsoft\Windows Defender\Scans\History\*") do rd /s /q "%%x" 2>nul
+del /f /s /q "%ProgramData%\Microsoft\Windows Defender\Scans\mpcache*" 2>nul
 del /f /s /q %ProgramData%\Microsoft\Diagnosis\*.* 2>nul
 for /d %%x in (%ProgramData%\Microsoft\Diagnosis\*) do rd /s /q "%%x" 2>nul
 del /f /s /q %ProgramData%\USOShared\Logs\*.* 2>nul
@@ -265,6 +310,12 @@ if exist %SystemDrive%\$Windows.~BT rd /s /q %SystemDrive%\$Windows.~BT 2>nul
 if exist %SystemDrive%\$Windows.~WS rd /s /q %SystemDrive%\$Windows.~WS 2>nul
 
 powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" 2>nul
+
+cleanmgr /sagerun:1 >nul 2>&1
+
+dism /online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
+
+vssadmin delete shadows /all /quiet >nul 2>&1
 
 powershell -Command "wevtutil cl Application" 2>nul
 powershell -Command "wevtutil cl System" 2>nul
