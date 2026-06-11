@@ -89,7 +89,6 @@ for /d %%u in (%SystemDrive%\Users\*) do (
     for /d %%x in ("%%u\AppData\Local\Temp\*") do rd /s /q "%%x" 2>nul
     del /f /s /q "%%u\AppData\Local\Microsoft\Windows\Explorer\*.db" 2>nul
     del /f /s /q "%%u\AppData\Local\Microsoft\Windows\Explorer\thumbcache_*.db" 2>nul
-    del /f /s /q "%%u\AppData\Local\D3DSCache\*.*" 2>nul
     del /f /s /q "%%u\AppData\Local\Microsoft\Windows\INetCache\*.*" 2>nul
     for /d %%x in ("%%u\AppData\Local\Microsoft\Windows\INetCache\*") do rd /s /q "%%x" 2>nul
     del /f /s /q "%%u\AppData\Local\Microsoft\Windows\INetCookies\*.*" 2>nul
