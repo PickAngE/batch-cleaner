@@ -310,11 +310,11 @@ if exist %SystemDrive%\$Windows.~WS rd /s /q %SystemDrive%\$Windows.~WS 2>nul
 
 powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" 2>nul
 
-cleanmgr /sagerun:1 >nul 2>&1
+powershell -Command "$p=start-process -filepath cleanmgr -argumentlist '/sagerun:1' -nonewwindow -passthru; if(!$p.WaitForExit(120000)){ $p.Kill() }" 2>nul
 
-dism /online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
+powershell -Command "$p=start-process -filepath dism -argumentlist '/online','/Cleanup-Image','/StartComponentCleanup','/ResetBase' -nonewwindow -passthru; if(!$p.WaitForExit(600000)){ $p.Kill() }" 2>nul
 
-vssadmin delete shadows /all /quiet >nul 2>&1
+powershell -Command "$p=start-process -filepath vssadmin -argumentlist 'delete','shadows','/all','/quiet' -nonewwindow -passthru; if(!$p.WaitForExit(300000)){ $p.Kill() }" 2>nul
 
 powershell -Command "wevtutil cl Application" 2>nul
 powershell -Command "wevtutil cl System" 2>nul
