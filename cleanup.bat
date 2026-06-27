@@ -61,7 +61,7 @@ if exist "%SystemRoot%\SysWOW64\config\systemprofile" call :cleandir "%SystemRoo
 call :cleanbyext "%SystemRoot%"
 del /f /q "%SystemRoot%\System32\FNTCACHE.DAT" 2>nul
 call :cleandir "%SystemRoot%\Installer\$PatchCache$"
-for /d %%f in ("%SystemRoot%\Microsoft.NET\Framework*") do for /d %%v in ("%%f\v*") do call :cleandir "%%v\Temporary ASP.NET Files"
+for /d %%f in ("%SystemRoot%\Microsoft.NET\Framework*") do call :clean_aspnet_temp "%%f"
 if exist "%SystemDrive%\inetpub\logs" call :cleandir "%SystemDrive%\inetpub\logs"
 del /f /s /q "%SystemRoot%\System32\LogFiles\WMI\RtBackup\*.etl" 2>nul
 call :cleandir "%SystemRoot%\System32\SleepStudy"
@@ -250,6 +250,10 @@ set "BASEDIR=%~1"
 for %%E in ("*.log" "*.tmp" "*.temp" "*.dmp" "*.old" "*.chk" "*.gid" "*.fts" "*.$$$" "*.---" "*.??$" "*.__" "*.~mp" "*._mp" "*.$db" "*.db$" "thumbs.db" "*.??~") do (
     del /f /q "%BASEDIR%\%%~E" 2>nul
 )
+exit /b 0
+
+:clean_aspnet_temp
+for /d %%v in ("%~1\v*") do call :cleandir "%%v\Temporary ASP.NET Files"
 exit /b 0
 
 :setupsagerun
