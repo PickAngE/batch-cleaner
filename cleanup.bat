@@ -4,7 +4,7 @@ cls
 
 net session >nul 2>&1
 if %errorLevel% neq 0 (
-    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs" >nul 2>&1
     exit /b 0
 )
 
@@ -32,9 +32,10 @@ call :stopservice "MapsBroker"
 exit /b 0
 
 :start_services
-call :startservice "wuauserv"
-call :startservice "BITS"
 call :startservice "Cryptographic Services" "CryptSvc"
+call :startservice "BITS"
+call :startservice "wuauserv"
+call :startservice "Themes"
 exit /b 0
 
 :clean_system
@@ -99,7 +100,9 @@ exit /b 0
 
 :clean_users
 call :cleandir "%SystemDrive%\Users\Default\AppData\Local\Temp"
-for /d %%u in ("%SystemDrive%\Users\*") do call :clean_one_user "%%u"
+for /d %%u in ("%SystemDrive%\Users\*") do (
+    if /i not "%%~nxu"=="Default" if /i not "%%~nxu"=="Default User" if /i not "%%~nxu"=="Public" if /i not "%%~nxu"=="All Users" call :clean_one_user "%%u"
+)
 exit /b 0
 
 :clean_one_user
@@ -209,11 +212,10 @@ exit /b 0
 
 :clean_windows_components
 call :cleanbyext "%SystemDrive%"
-if exist "%SystemDrive%\Windows.old" rd /s /q "%SystemDrive%\Windows.old" 2>nul
-if exist "%SystemDrive%\$Windows.~BT" rd /s /q "%SystemDrive%\$Windows.~BT" 2>nul
-if exist "%SystemDrive%\$Windows.~WS" rd /s /q "%SystemDrive%\$Windows.~WS" 2>nul
-powershell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageUserInformation -like '*Staged*'} | Remove-AppxPackage -ErrorAction SilentlyContinue" 2>nul
-powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" 2>nul
+call :removedir_forced "%SystemDrive%\$Windows.~BT"
+call :removedir_forced "%SystemDrive%\$Windows.~WS"
+powershell -Command "Get-AppxPackage -AllUsers | Where-Object {($_.PackageUserInformation | Where-Object {$_.InstallState -eq 'Staged'})} | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue" >nul 2>&1
+powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul 2>&1
 exit /b 0
 
 :finalize
@@ -256,11 +258,10 @@ exit /b 0
 for /d %%v in ("%~1\v*") do call :cleandir "%%v\Temporary ASP.NET Files"
 exit /b 0
 
-:setupsagerun
-reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches" /s /v "StateFlags0001" >nul 2>&1
-if %errorlevel% neq 0 (
-    for %%K in ("Temporary Files" "Recycle Bin" "Temporary Setup Files" "Windows Error Reporting Files" "System error memory dump files" "System error minidump files" "Delivery Optimization Files" "Update Cleanup" "DirectX Shader Cache" "Downloaded Program Files") do (
-        reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\%%~K" /v StateFlags0001 /t REG_DWORD /d 2 /f >nul 2>&1
-    )
+:removedir_forced
+if exist "%~1" (
+    takeown /f "%~1" /r /d y >nul 2>&1
+    icacls "%~1" /grant *S-1-5-32-544:F /t /c /q >nul 2>&1
+    rd /s /q "%~1" 2>nul
 )
 exit /b 0
