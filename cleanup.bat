@@ -15,7 +15,6 @@ call :clean_program_files
 call :clean_users
 call :clean_windows_components
 call :start_services
-call :finalize
 
 exit /b 0
 
@@ -29,37 +28,36 @@ call :stopservice "DiagTrack"
 call :stopservice "dmwappushservice"
 call :stopservice "WSearch"
 call :stopservice "MapsBroker"
-exit /b 0
+goto :eof
 
 :start_services
 call :startservice "Cryptographic Services" "CryptSvc"
 call :startservice "BITS"
 call :startservice "wuauserv"
 call :startservice "Themes"
-exit /b 0
+goto :eof
 
 :clean_system
 call :cleandir "%SystemRoot%\Temp"
-call :cleanfiles "%SystemRoot%\Prefetch\*.*"
+del /f /s /q "%SystemRoot%\Prefetch\*.*" 2>nul
 call :cleandir "%SystemRoot%\SoftwareDistribution\Download"
 call :cleandir "%SystemRoot%\SoftwareDistribution\DeliveryOptimization"
-call :cleanfiles "%SystemRoot%\Logs\CBS\*.*"
-call :cleanfiles "%SystemRoot%\Logs\DISM\*.*"
-call :cleanfiles "%SystemRoot%\Logs\WindowsUpdate\*.*"
+del /f /s /q "%SystemRoot%\Logs\CBS\*.*" 2>nul
+del /f /s /q "%SystemRoot%\Logs\DISM\*.*" 2>nul
+del /f /s /q "%SystemRoot%\Logs\WindowsUpdate\*.*" 2>nul
 call :cleandir "%SystemRoot%\Logs\WindowsUpdateMedic"
-call :cleanfiles "%SystemRoot%\Minidump\*.*"
+del /f /s /q "%SystemRoot%\Minidump\*.*" 2>nul
 call :cleandir "%SystemRoot%\LiveKernelReports"
-if exist "%SystemRoot%\MEMORY.DMP" del /f /q "%SystemRoot%\MEMORY.DMP" 2>nul
-call :cleanfiles "%SystemRoot%\System32\LogFiles\WMI\*.etl"
+del /f /q "%SystemRoot%\MEMORY.DMP" 2>nul
+del /f /s /q "%SystemRoot%\System32\LogFiles\WMI\*.etl" 2>nul
 call :cleandir "%SystemRoot%\Downloaded Program Files"
-call :cleanfiles "%SystemRoot%\Panther\*.*"
-call :cleanfiles "%SystemRoot%\Performance\WinSAT\*.*"
+del /f /s /q "%SystemRoot%\Panther\*.*" 2>nul
+del /f /s /q "%SystemRoot%\Performance\WinSAT\*.*" 2>nul
 call :cleandir "%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\Temp"
 call :cleandir "%SystemRoot%\ServiceProfiles\LocalService\AppData\Local\FontCache"
 call :cleandir "%SystemRoot%\ServiceProfiles\NetworkService\AppData\Local\Temp"
 call :cleandir "%SystemRoot%\System32\config\systemprofile\AppData\Local\Temp"
 if exist "%SystemRoot%\SysWOW64\config\systemprofile" call :cleandir "%SystemRoot%\SysWOW64\config\systemprofile\AppData\Local\Temp"
-call :cleanbyext "%SystemRoot%"
 del /f /q "%SystemRoot%\System32\FNTCACHE.DAT" 2>nul
 call :cleandir "%SystemRoot%\Installer\$PatchCache$"
 for /d %%f in ("%SystemRoot%\Microsoft.NET\Framework*") do call :clean_aspnet_temp "%%f"
@@ -68,9 +66,9 @@ del /f /s /q "%SystemRoot%\System32\LogFiles\WMI\RtBackup\*.etl" 2>nul
 call :cleandir "%SystemRoot%\System32\SleepStudy"
 del /f /s /q "%SystemRoot%\System32\sru\*.log" 2>nul
 del /f /s /q "%SystemRoot%\System32\sru\*.tmp" 2>nul
-if exist "%SystemRoot%\WinSxS\ManifestCache" rd /s /q "%SystemRoot%\WinSxS\ManifestCache" 2>nul
+rd /s /q "%SystemRoot%\WinSxS\ManifestCache" 2>nul
 call :cleandir "%SystemRoot%\System32\config\systemprofile\AppData\Local\Microsoft\Windows\INetCache"
-exit /b 0
+goto :eof
 
 :clean_program_data
 call :cleandir "%ProgramData%\Temp"
@@ -84,26 +82,26 @@ del /f /s /q "%ProgramData%\USOShared\Logs\*.*" 2>nul
 del /f /s /q "%ProgramData%\Package Cache\*.*" 2>nul
 del /f /s /q "%ProgramData%\USOPrivate\UpdateStore\*.bin" 2>nul
 del /f /s /q "%ProgramData%\USOPrivate\UpdateStore\*.log" 2>nul
-for /d %%r in ("%ProgramData%\Razer\*") do call :cleanfiles "%%r\Logs\*.*"
+for /d %%r in ("%ProgramData%\Razer\*") do del /f /s /q "%%r\Logs\*.*" 2>nul
 call :cleandir "%ProgramData%\Battle.net\Cache"
 call :cleandir "%ProgramData%\Blizzard Entertainment\Battle.net\Cache"
-call :cleanfiles "%ProgramData%\GOG.com\Galaxy\logs\*.*"
-call :cleanfiles "%ProgramData%\GOG.com\Galaxy\webcache\*.*"
-exit /b 0
+del /f /s /q "%ProgramData%\GOG.com\Galaxy\logs\*.*" 2>nul
+del /f /s /q "%ProgramData%\GOG.com\Galaxy\webcache\*.*" 2>nul
+goto :eof
 
 :clean_program_files
 call :cleandir "%ProgramFiles(x86)%\Steam\appcache"
 call :cleandir "%ProgramFiles(x86)%\Steam\logs"
 call :cleandir "%ProgramFiles(x86)%\Steam\dumps"
 call :cleandir "%ProgramFiles(x86)%\Ubisoft\Ubisoft Game Launcher\cache"
-exit /b 0
+goto :eof
 
 :clean_users
 call :cleandir "%SystemDrive%\Users\Default\AppData\Local\Temp"
 for /d %%u in ("%SystemDrive%\Users\*") do (
     if /i not "%%~nxu"=="Default" if /i not "%%~nxu"=="Default User" if /i not "%%~nxu"=="Public" if /i not "%%~nxu"=="All Users" call :clean_one_user "%%u"
 )
-exit /b 0
+goto :eof
 
 :clean_one_user
 set "U=%~1"
@@ -120,7 +118,7 @@ del /f /s /q "%U%\AppData\Local\Microsoft\Windows\Notifications\*.*" 2>nul
 del /f /s /q "%U%\AppData\Local\Microsoft\Windows\History\*.*" 2>nul
 del /f /s /q "%U%\AppData\Local\Microsoft\Terminal Server Client\Cache\*.*" 2>nul
 del /f /s /q "%U%\AppData\Local\CrashDumps\*.*" 2>nul
-del /f /s /q "%U%\AppData\Local\IconCache.db" 2>nul
+del /f /q "%U%\AppData\Local\IconCache.db" 2>nul
 for /d %%p in ("%U%\AppData\Local\Packages\*") do (
     del /f /s /q "%%p\AC\Temp\*.*" 2>nul
     del /f /s /q "%%p\TempState\*.*" 2>nul
@@ -129,7 +127,6 @@ for /d %%p in ("%U%\AppData\Local\Packages\*") do (
 call :cleandir "%U%\AppData\Local\Microsoft\Windows\Store\Cache"
 del /f /s /q "%U%\AppData\Roaming\Microsoft\Windows\Recent\*.*" 2>nul
 del /f /s /q "%U%\Recent\*.*" 2>nul
-call :cleanbyext "%U%"
 del /f /s /q "%U%\AppData\Local\Microsoft\CLR_v4.0\UsageLogs\*.*" 2>nul
 del /f /s /q "%U%\AppData\Local\Microsoft\CLR_v4.0_32\UsageLogs\*.*" 2>nul
 call :cleandir "%U%\AppData\LocalLow\Temp"
@@ -208,60 +205,38 @@ call :cleandir "%U%\AppData\Local\LGHUB\cache"
 call :cleandir "%U%\AppData\Local\Corsair\CUE4\logs"
 call :cleandir "%U%\AppData\Local\Corsair\CUE5\logs"
 call :cleandir "%U%\AppData\Local\Microsoft\Windows\WER"
-exit /b 0
+goto :eof
 
 :clean_windows_components
-call :cleanbyext "%SystemDrive%"
-call :removedir_forced "%SystemDrive%\$Windows.~BT"
-call :removedir_forced "%SystemDrive%\$Windows.~WS"
+call :forcedir "%SystemDrive%\$Windows.~BT"
+call :forcedir "%SystemDrive%\$Windows.~WS"
 powershell -Command "Get-AppxPackage -AllUsers | Where-Object {($_.PackageUserInformation | Where-Object {$_.InstallState -eq 'Staged'})} | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue" >nul 2>&1
 powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul 2>&1
-exit /b 0
-
-:finalize
-wsreset.exe >nul 2>&1
-ipconfig /flushdns >nul 2>&1
-exit /b 0
+goto :eof
 
 :stopservice
-set "SVCNAME=%~1"
 set "SVCKEY=%~2"
 if "%SVCKEY%"=="" set "SVCKEY=%~1"
 sc query "%SVCKEY%" | find "RUNNING" >nul 2>&1
-if %errorlevel%==0 net stop "%SVCNAME%" >nul 2>&1
-exit /b 0
+if %errorlevel%==0 net stop "%~1" >nul 2>&1
+goto :eof
 
 :startservice
 net start "%~1" >nul 2>&1
-exit /b 0
+goto :eof
 
 :cleandir
 set "TARGETDIR=%~1"
-if exist "%TARGETDIR%\" (
-    del /f /s /q "%TARGETDIR%\*" >nul 2>&1
-    for /d %%x in ("%TARGETDIR%\*") do rd /s /q "%%x" >nul 2>&1
-)
-exit /b 0
-
-:cleanfiles
-del /f /s /q "%~1" 2>nul
-exit /b 0
-
-:cleanbyext
-set "BASEDIR=%~1"
-for %%E in ("*.log" "*.tmp" "*.temp" "*.dmp" "*.old" "*.chk" "*.gid" "*.fts" "*.$$$" "*.---" "*.??$" "*.__" "*.~mp" "*._mp" "*.$db" "*.db$" "thumbs.db" "*.??~") do (
-    del /f /q "%BASEDIR%\%%~E" 2>nul
-)
-exit /b 0
+del /f /s /q "%TARGETDIR%\*" >nul 2>&1
+for /d %%x in ("%TARGETDIR%\*") do rd /s /q "%%x" >nul 2>&1
+goto :eof
 
 :clean_aspnet_temp
-for /d %%v in ("%~1\v*") do call :cleandir "%%v\Temporary ASP.NET Files"
-exit /b 0
+for /d %%v in ("%~1\v*") do rd /s /q "%%v\Temporary ASP.NET Files" 2>nul
+goto :eof
 
-:removedir_forced
-if exist "%~1" (
-    takeown /f "%~1" /r /d y >nul 2>&1
-    icacls "%~1" /grant *S-1-5-32-544:F /t /c /q >nul 2>&1
-    rd /s /q "%~1" 2>nul
-)
-exit /b 0
+:forcedir
+takeown /f "%~1" /r /d y >nul 2>&1
+icacls "%~1" /grant *S-1-5-32-544:F /t /c /q >nul 2>&1
+rd /s /q "%~1" 2>nul
+goto :eof
