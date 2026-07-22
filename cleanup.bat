@@ -62,7 +62,6 @@ del /f /q "%SystemRoot%\System32\FNTCACHE.DAT" 2>nul
 call :cleandir "%SystemRoot%\Installer\$PatchCache$"
 for /d %%f in ("%SystemRoot%\Microsoft.NET\Framework*") do call :clean_aspnet_temp "%%f"
 if exist "%SystemDrive%\inetpub\logs" call :cleandir "%SystemDrive%\inetpub\logs"
-del /f /s /q "%SystemRoot%\System32\LogFiles\WMI\RtBackup\*.etl" 2>nul
 call :cleandir "%SystemRoot%\System32\SleepStudy"
 del /f /s /q "%SystemRoot%\System32\sru\*.log" 2>nul
 del /f /s /q "%SystemRoot%\System32\sru\*.tmp" 2>nul
@@ -215,10 +214,7 @@ powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul
 goto :eof
 
 :stopservice
-set "SVCKEY=%~2"
-if "%SVCKEY%"=="" set "SVCKEY=%~1"
-sc query "%SVCKEY%" | find "RUNNING" >nul 2>&1
-if %errorlevel%==0 net stop "%~1" >nul 2>&1
+net stop "%~1" >nul 2>&1
 goto :eof
 
 :startservice
@@ -226,9 +222,14 @@ net start "%~1" >nul 2>&1
 goto :eof
 
 :cleandir
-set "TARGETDIR=%~1"
-del /f /s /q "%TARGETDIR%\*" >nul 2>&1
-for /d %%x in ("%TARGETDIR%\*") do rd /s /q "%%x" >nul 2>&1
+if not exist "%~1\" goto :eof
+rd /s /q "%~1" 2>nul
+if exist "%~1\" (
+    del /f /s /q "%~1\*" >nul 2>&1
+    for /d %%x in ("%~1\*") do rd /s /q "%%x" >nul 2>&1
+) else (
+    md "%~1" 2>nul
+)
 goto :eof
 
 :clean_aspnet_temp
@@ -236,7 +237,9 @@ for /d %%v in ("%~1\v*") do rd /s /q "%%v\Temporary ASP.NET Files" 2>nul
 goto :eof
 
 :forcedir
-takeown /f "%~1" /r /d y >nul 2>&1
-icacls "%~1" /grant *S-1-5-32-544:F /t /c /q >nul 2>&1
-rd /s /q "%~1" 2>nul
+if exist "%~1\" (
+    takeown /f "%~1" /r /d y >nul 2>&1
+    icacls "%~1" /grant *S-1-5-32-544:F /t /c /q >nul 2>&1
+    rd /s /q "%~1" 2>nul
+)
 goto :eof
